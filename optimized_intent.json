@@ -1,0 +1,42 @@
+{
+  "traces": [],
+  "train": [],
+  "demos": [
+    {
+      "augmented": true,
+      "message": "I was charged twice this month",
+      "label": "billing"
+    },
+    {
+      "augmented": true,
+      "message": "Please send me a copy of my invoice",
+      "label": "billing"
+    },
+    {
+      "augmented": true,
+      "message": "My refund has not arrived yet",
+      "label": "billing"
+    }
+  ],
+  "signature": {
+    "instructions": "Classify a customer support message into one intent.",
+    "fields": [
+      {
+        "prefix": "Message:",
+        "description": "${message}"
+      },
+      {
+        "prefix": "Label:",
+        "description": "${label}"
+      }
+    ]
+  },
+  "lm": null,
+  "metadata": {
+    "dependency_versions": {
+      "python": "3.12",
+      "dspy": "3.4.0",
+      "cloudpickle": "3.1"
+    }
+  }
+}

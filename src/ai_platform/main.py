@@ -1,3 +1,9 @@
+import dspy
+
+from ai_platform.dspy_setup import get_lm
+from ai_platform.rag import RAG
+from ai_platform.schemas import AskRequest
+
 import asyncio
 import time
 from collections.abc import AsyncIterator
@@ -13,6 +19,7 @@ from ai_platform.schemas import ChatRequest, ChatResponse
 
 app = FastAPI(title="Enterprise AI Gateway")
 cache = SemanticCache()
+rag = RAG()
 
 
 @app.get("/health")
@@ -85,6 +92,23 @@ async def token_stream(message: str) -> AsyncIterator[str]:
         await asyncio.sleep(0.15)
     yield "data: [DONE]\n\n"
 
+
+@app.post("/ask")
+async def ask(req: AskRequest):
+    def run():
+        # per-request provider switch
+        with dspy.context(lm=get_lm(req.provider)):
+            return rag(question=req.question, department=req.department)
+
+    try:
+        pred = await asyncio.to_thread(run)  # DSPy sync che + embedding CPU kaam
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+    return {
+        "answer": pred.answer,
+        "reasoning": getattr(pred, "reasoning", None) or getattr(pred, "rationale", None),
+    }
 
 @app.get("/chat/stream")
 async def chat_stream(message: str):

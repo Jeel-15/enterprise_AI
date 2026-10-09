@@ -14,3 +14,8 @@ class ChatResponse(BaseModel):
     source: str = "llm"           # "llm" ya "cache"
     provider: str | None = None   # kayo provider vapryo
     latency_ms: float = 0.0
+    
+class AskRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=2000)
+    department: str | None = None
+    provider: str | None = None
