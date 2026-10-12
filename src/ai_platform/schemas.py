@@ -19,3 +19,12 @@ class AskRequest(BaseModel):
     question: str = Field(min_length=1, max_length=2000)
     department: str | None = None
     provider: str | None = None
+    
+class AgentRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=2000)
+    thread_id: str | None = None
+    provider: str | None = None
+
+
+class ResumeRequest(BaseModel):
+    approved: bool

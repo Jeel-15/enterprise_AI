@@ -6,8 +6,9 @@ from ai_platform.embeddings import DIM, dense_model
 
 COLLECTION = "docs"
 
-dense_model = TextEmbedding("BAAI/bge-small-en-v1.5")  # 384 dimensions
 sparse_model = SparseTextEmbedding("Qdrant/bm25")
+
+# Local mode: data settings.qdrant_path folder ma save thase
 client = QdrantClient(path=settings.qdrant_path)
 
 
@@ -21,7 +22,7 @@ def init_collection() -> None:
     client.create_collection(
         collection_name=COLLECTION,
         vectors_config={
-            "dense": models.VectorParams(size=384, distance=models.Distance.COSINE)
+            "dense": models.VectorParams(size=DIM, distance=models.Distance.COSINE)
         },
         sparse_vectors_config={
             "bm25": models.SparseVectorParams(modifier=models.Modifier.IDF)
